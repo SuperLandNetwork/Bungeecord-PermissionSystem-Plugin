@@ -28,8 +28,8 @@
 
 package de.superlandnetwork.bungeecord.permission.api;
 
-import de.superlandnetwork.spigot.api.database.MySQL;
-import de.superlandnetwork.spigot.permission.Main;
+import de.superlandnetwork.bungeecord.api.database.MySQL;
+import de.superlandnetwork.bungeecord.permission.Main;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,7 +65,7 @@ public class PermissionAPI {
     }
 
     public Group getGroup(String name) throws SQLException {
-        String sql = "SELECT * FROM " + Table.MC_GROUPS.getName() + " WHERE `deleted_at` IS NULL AND name='"+ name + "'";
+        String sql = "SELECT * FROM " + Table.MC_GROUPS.getName() + " WHERE `deleted_at` IS NULL AND name='" + name + "'";
         ResultSet rs = mySQL.getResult(sql);
         if (rs.next())
             return new Group(rs.getInt("id"), rs.getString("name"), rs.getString("tab"),
@@ -78,8 +78,9 @@ public class PermissionAPI {
         List<Integer> ids = new ArrayList<>();
         List<Integer> groupIds = new ArrayList<>();
         HashMap<Integer, Long> times = new HashMap<>();
-        String sql = "SELECT * FROM " + Table.MC_USERS.getName() + " WHERE `deleted_at` IS NULL AND uuid='"+ uuid.toString() + "'";
+        String sql = "SELECT * FROM " + Table.MC_USERS.getName() + " WHERE `deleted_at` IS NULL AND uuid='" + uuid.toString() + "'";
         ResultSet rs = mySQL.getResult(sql);
+        groupIds.add(1);
         while (rs.next()) {
             ids.add(rs.getInt("id"));
             groupIds.add(rs.getInt("groupId"));
@@ -90,7 +91,7 @@ public class PermissionAPI {
 
     public List<String> getPermissions(int groupId) throws SQLException {
         List<String> list = new ArrayList<>();
-        String sql = "SELECT * FROM " + Table.MC_PERMISSIONS.getName() + " WHERE `deleted_at` IS NULL AND groupId='"+ groupId + "'";
+        String sql = "SELECT * FROM " + Table.MC_PERMISSIONS.getName() + " WHERE `deleted_at` IS NULL AND groupId='" + groupId + "'";
         ResultSet rs = mySQL.getResult(sql);
         while (rs.next()) {
             list.add(rs.getString("permission"));
@@ -99,7 +100,7 @@ public class PermissionAPI {
     }
 
     public String getChat(int groupId) throws SQLException {
-        String sql = "SELECT `chat` FROM " + Table.MC_GROUPS.getName() + " WHERE `deleted_at` IS NULL AND id='"+ groupId + "'";
+        String sql = "SELECT `chat` FROM " + Table.MC_GROUPS.getName() + " WHERE `deleted_at` IS NULL AND id='" + groupId + "'";
         ResultSet rs = mySQL.getResult(sql);
         if (rs.next())
             return rs.getString("chat");
@@ -107,7 +108,7 @@ public class PermissionAPI {
     }
 
     public String getTab(int groupId) throws SQLException {
-        String sql = "SELECT `tab` FROM " + Table.MC_GROUPS.getName() + " WHERE `deleted_at` IS NULL AND id='"+ groupId + "'";
+        String sql = "SELECT `tab` FROM " + Table.MC_GROUPS.getName() + " WHERE `deleted_at` IS NULL AND id='" + groupId + "'";
         ResultSet rs = mySQL.getResult(sql);
         if (rs.next())
             return rs.getString("tab");
@@ -115,11 +116,11 @@ public class PermissionAPI {
     }
 
     public int getHighestVisibleGroup(UUID uuid) throws SQLException {
-        String sql = "SELECT `groupId` FROM " + Table.MC_USERS.getName() + " WHERE `deleted_at` IS NULL AND uuid='"+ uuid + "' ORDER BY `" + Table.MC_USERS.getName() + "`.`groupId` DESC";
+        String sql = "SELECT `groupId` FROM " + Table.MC_USERS.getName() + " WHERE `deleted_at` IS NULL AND uuid='" + uuid + "' ORDER BY `" + Table.MC_USERS.getName() + "`.`groupId` DESC";
         ResultSet rs = mySQL.getResult(sql);
         while (rs.next()) {
             int id = rs.getInt("groupId");
-            String sql2 = "SELECT `visible` FROM " + Table.MC_GROUPS.getName() + " WHERE `deleted_at` IS NULL AND id='"+ id + "'";
+            String sql2 = "SELECT `visible` FROM " + Table.MC_GROUPS.getName() + " WHERE `deleted_at` IS NULL AND id='" + id + "'";
             ResultSet rs2 = mySQL.getResult(sql2);
             if (rs2.getBoolean("visible"))
                 return id;

@@ -26,35 +26,41 @@
  *
  */
 
-package de.superlandnetwork.bungeecord.permission;
+package de.superlandnetwork.bungeecord.permission.listener;
 
-import de.superlandnetwork.bungeecord.api.database.MySQL;
-import de.superlandnetwork.bungeecord.permission.listener.JoinListener;
-import net.md_5.bungee.api.plugin.Plugin;
+import de.superlandnetwork.bungeecord.permission.api.PermissionAPI;
+import de.superlandnetwork.bungeecord.permission.api.User;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 
-public final class Main extends Plugin {
+import java.sql.SQLException;
+import java.util.List;
 
-    private static Main instance;
+public class JoinListener implements Listener {
 
-    public static Main getInstance() {
-        return instance;
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onLogin(PostLoginEvent e) {
+        ProxiedPlayer p = e.getPlayer();
+        PermissionAPI api = new PermissionAPI();
+        try {
+            api.connect();
+            User user = api.getUser(p.getUniqueId());
+            for (int group : user.getGroupIds()) {
+                setPermission(p, api.getPermissions(group));
+            }
+            api.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
-    @Override
-    public void onEnable() {
-        instance = this;
-        getProxy().getPluginManager().registerListener(this, new JoinListener());
+    private void setPermission(ProxiedPlayer p, List<String> list) {
+        for (String s : list) {
+            p.setPermission(s, true);
+        }
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
-
-    public MySQL getMySQL() {
-//        return new MySQL(getConfig().getString("mysql.host"), getConfig().getString("mysql.port"),
-//                getConfig().getString("mysql.database"), getConfig().getString("mysql.username"),
-//                getConfig().getString("mysql.password"));
-        return null;
-    }
 }
