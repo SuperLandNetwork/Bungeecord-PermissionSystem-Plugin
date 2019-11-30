@@ -2,3 +2,4 @@ name: PermissionSystem
 version: ${project.version}
 main: de.superlandnetwork.bungeecord.permission.Main
 description: ${project.description}
+author: ursinn
