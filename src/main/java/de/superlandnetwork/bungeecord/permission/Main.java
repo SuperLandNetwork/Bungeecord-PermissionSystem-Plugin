@@ -30,7 +30,9 @@ package de.superlandnetwork.bungeecord.permission;
 
 import de.superlandnetwork.bungeecord.api.database.MySQL;
 import de.superlandnetwork.bungeecord.permission.listener.JoinListener;
+import de.superlandnetwork.bungeecord.permission.utils.Config;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.Configuration;
 
 public final class Main extends Plugin {
 
@@ -52,9 +54,12 @@ public final class Main extends Plugin {
     }
 
     public MySQL getMySQL() {
-//        return new MySQL(getConfig().getString("mysql.host"), getConfig().getString("mysql.port"),
-//                getConfig().getString("mysql.database"), getConfig().getString("mysql.username"),
-//                getConfig().getString("mysql.password"));
-        return null;
+        return new MySQL(getConfig().getString("mysql.host"), getConfig().getString("mysql.port"),
+                getConfig().getString("mysql.database"), getConfig().getString("mysql.username"),
+                getConfig().getString("mysql.password"));
+    }
+
+    public Configuration getConfig() {
+        return new Config().getConfiguration();
     }
 }
