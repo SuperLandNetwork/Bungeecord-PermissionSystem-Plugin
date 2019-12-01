@@ -125,6 +125,16 @@ public class PermissionAPI {
         return 1;
     }
 
+    public void removeGroup(UUID uuid, int groupId, long time) throws SQLException {
+        String sql = "UPDATE " + Table.MC_USERS + " SET `deleted_at`=CURRENT_TIMESTAMP WHERE `groupId`='" + groupId + "' AND `uuid`='" + uuid.toString() + "' AND `time`='" + time + "'";
+        mySQL.update(sql);
+    }
+
+    public void addGroup(UUID uuid, int groupId, long time) throws SQLException {
+        String sql = "INSERT INTO " + Table.MC_USERS + " (`uuid`, `groupId`, `time`) VALUES ('" + uuid.toString() + "', '" + groupId + "', '" + time + "')";
+        mySQL.update(sql);
+    }
+
     public enum Table {
         MC_GROUPS("sln_mc_groups"),
         MC_USERS("sln_mc_perm_users"),
