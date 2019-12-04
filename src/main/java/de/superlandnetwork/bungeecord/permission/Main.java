@@ -28,9 +28,9 @@
 
 package de.superlandnetwork.bungeecord.permission;
 
-import de.superlandnetwork.bungeecord.api.database.MySQL;
 import de.superlandnetwork.bungeecord.permission.listener.JoinListener;
 import de.superlandnetwork.bungeecord.permission.utils.Config;
+import de.superlandnetwork.lib.database.MySQL;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.Properties;

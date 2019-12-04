@@ -28,8 +28,8 @@
 
 package de.superlandnetwork.bungeecord.permission.api;
 
-import de.superlandnetwork.bungeecord.api.database.MySQL;
 import de.superlandnetwork.bungeecord.permission.Main;
+import de.superlandnetwork.lib.database.MySQL;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -119,8 +119,10 @@ public class PermissionAPI {
             int id = rs.getInt("groupId");
             String sql2 = "SELECT `visible` FROM " + Table.MC_GROUPS.getName() + " WHERE `deleted_at` IS NULL AND id='" + id + "'";
             ResultSet rs2 = mySQL.getResult(sql2);
-            if (rs2.getBoolean("visible"))
-                return id;
+            if (rs2.next()) {
+                if (rs2.getBoolean("visible"))
+                    return id;
+            }
         }
         return 1;
     }
